@@ -10,7 +10,9 @@ import (
 
 func main() {
 	storage.NewPostgresDB()
-	migrateTables()
+	//migrateTables()
+	createProduct()
+
 }
 
 func migrateTables() {
@@ -28,4 +30,17 @@ func migrateTables() {
 	if err := serviceInvoiceItem.Migrate(); err != nil {
 		log.Fatalf("invoiceItem.migrate, %v", err)
 	}
+}
+
+func createProduct() {
+	m := &product.Model{
+		Name:         "Curso de Go v2",
+		Price:        3434.3,
+		Observations: "Segundo curso en go",
+	}
+	serviceProduct := product.NewService(storage.NewPsqlProduct(storage.Pool()))
+	if err := serviceProduct.CreateProduct(m); err != nil {
+		log.Fatalf("product.Create %v", err)
+	}
+
 }

@@ -35,6 +35,6 @@ func (p *PsqlInvoiceHeader) Migrate() error {
 		return err
 	}
 
-	fmt.Println("migración de invoiceHeader ejecutada correctamente")
+	fmt.Println("Migración de la tabla invoiceHeader ejecutada correctamente")
 	return nil
 }
