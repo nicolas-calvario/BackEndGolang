@@ -38,6 +38,6 @@ func (p *PsqlInvoiceItem) Migrate() error {
 		return err
 	}
 
-	fmt.Println("migración de invoiceIthem ejecutada correctamente")
+	fmt.Println("Migración de la tabla invoiceIthem ejecutada correctamente")
 	return nil
 }

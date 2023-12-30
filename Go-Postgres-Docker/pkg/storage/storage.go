@@ -3,8 +3,10 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"go-postgres/pkg/product"
 	"log"
 	"sync"
+	"time"
 
 	// ...
 	_ "github.com/lib/pq" // paquete del driver para PostgreSQL
@@ -37,4 +39,48 @@ func NewPostgresDB() {
 // Pool retorna una unica instancia de db
 func Pool() *sql.DB {
 	return db
+}
+
+// validacion para guaradar nulos
+func stringToNull(s string) sql.NullString {
+	null := sql.NullString{String: s}
+	if null.String != "" {
+		null.Valid = true
+	}
+	return null
+}
+
+type scanner interface {
+	Scan(dest ...interface{}) error
+}
+
+func scanRowProduct(s scanner) (*product.Model, error) {
+	m := &product.Model{}
+	observationNull := sql.NullString{}
+	updatedAtNull := sql.NullTime{}
+
+	err := s.Scan(
+		&m.Id,
+		&m.Name,
+		&observationNull,
+		&m.Price,
+		&m.CreatedAt,
+		&updatedAtNull,
+	)
+	if err != nil {
+		return &product.Model{}, err
+	}
+
+	m.Observations = observationNull.String
+	m.UpdatedAt = updatedAtNull.Time
+
+	return m, nil
+}
+
+func timeToNull(t time.Time) sql.NullTime {
+	null := sql.NullTime{Time: t}
+	if !null.Time.IsZero() {
+		null.Valid = true
+	}
+	return null
 }
