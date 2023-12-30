@@ -14,9 +14,14 @@ import (
 func main() {
 	storage.NewPostgresDB()
 	//migrateTables() 	// metodo para creacion de tablas en  la bd definida
-	//createProduct()	// metodo para guaradar prodcutos
-	//getall()			// metodo que obtiene un producto por id
-	getByid()
+
+	createProduct() // metodo para guaradar prodcutos
+	getall()        // metodo que obtiene un producto por id
+	delete()
+	getall()
+	//getByid()
+	//update()
+	//getByid()
 
 }
 
@@ -61,7 +66,7 @@ func getall() {
 
 func getByid() {
 	serviceProduct := product.NewService(storage.NewPsqlProduct(storage.Pool()))
-	m, err := serviceProduct.GetById(6)
+	m, err := serviceProduct.GetById(2)
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
 		fmt.Println("No hay producto con ese id")
@@ -70,5 +75,25 @@ func getByid() {
 
 	default:
 		fmt.Println(m)
+	}
+}
+func update() {
+	m := &product.Model{
+		Id:    2,
+		Name:  "Curso testing",
+		Price: 150,
+	}
+	serviceProduct := product.NewService(storage.NewPsqlProduct(storage.Pool()))
+
+	err := serviceProduct.Update(m)
+	if err != nil {
+		log.Fatalf("product.Update: %v", err)
+	}
+}
+func delete() {
+	serviceProduct := product.NewService(storage.NewPsqlProduct(storage.Pool()))
+	err := serviceProduct.Delete(1)
+	if err != nil {
+		log.Fatalf("product.Delete: %v", err)
 	}
 }
