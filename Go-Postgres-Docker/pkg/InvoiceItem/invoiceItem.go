@@ -1,6 +1,9 @@
-package invoiceithem
+package invoiceitem
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 type Model struct {
 	Id              uint      `json:"id"`
@@ -9,8 +12,11 @@ type Model struct {
 	CreatedAt       time.Time `json:"createdAt"`
 }
 
+type Models []*Model
+
 type Storage interface {
 	Migrate() error
+	CreateTx(*sql.Tx, uint, Models) error
 }
 
 type Service struct {

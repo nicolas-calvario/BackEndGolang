@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	invoiceheader "go-postgres/pkg/invoiceHeader"
 )
 
 const (
@@ -13,6 +14,7 @@ const (
 		updated_at TIMESTAMP,
 		CONSTRAINT invoice_headers_id_pk PRIMARY KEY (id) 
 	)`
+	psqlCreateInvoiceHeader = `INSERT INTO invoice_headers(client) VALUES($1) RETURNING id, created_at`
 )
 
 type PsqlInvoiceHeader struct {
@@ -37,4 +39,14 @@ func (p *PsqlInvoiceHeader) Migrate() error {
 
 	fmt.Println("Migración de la tabla invoiceHeader ejecutada correctamente")
 	return nil
+}
+
+func (p *PsqlInvoiceHeader) CreateTx(tx *sql.Tx, m *invoiceheader.Model) error {
+	stmt, err := tx.Prepare(psqlCreateInvoiceHeader)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	return stmt.QueryRow(m.Client).Scan(&m.Id, &m.CreatedAt)
 }
