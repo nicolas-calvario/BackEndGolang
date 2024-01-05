@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	invoiceithem "go-postgres/pkg/InvoiceIthem"
+	invoiceitem "go-postgres/pkg/InvoiceItem"
+	invoiceithem "go-postgres/pkg/InvoiceItem"
+	"go-postgres/pkg/invoice"
 	invoiceheader "go-postgres/pkg/invoiceHeader"
 	"go-postgres/pkg/product"
 	"go-postgres/pkg/storage"
@@ -15,13 +17,14 @@ func main() {
 	storage.NewPostgresDB()
 	//migrateTables() 	// metodo para creacion de tablas en  la bd definida
 
-	createProduct() // metodo para guaradar prodcutos
-	getall()        // metodo que obtiene un producto por id
-	delete()
-	getall()
+	// createProduct() // metodo para guaradar prodcutos
+	// getall()        // metodo que obtiene un producto por id
+	// delete()
+	// getall()
 	//getByid()
 	//update()
 	//getByid()
+	transaction()
 
 }
 
@@ -95,5 +98,31 @@ func delete() {
 	err := serviceProduct.Delete(1)
 	if err != nil {
 		log.Fatalf("product.Delete: %v", err)
+	}
+}
+
+func transaction() {
+
+	storageHeader := storage.NewPsqlInvoiceHeader(storage.Pool())
+	storageItems := storage.NewPsqlInvoiceItem(storage.Pool())
+	storageInvoice := storage.NewPsqlInvoice(
+		storage.Pool(),
+		storageHeader,
+		storageItems,
+	)
+
+	m := &invoice.Model{
+		Header: &invoiceheader.Model{
+			Client: "Alvaro Felipe",
+		},
+		Items: invoiceitem.Models{
+			&invoiceitem.Model{ProductId: 2},
+			&invoiceitem.Model{ProductId: 3},
+		},
+	}
+
+	serviceInvoice := invoice.NewService(storageInvoice)
+	if err := serviceInvoice.Create(m); err != nil {
+		log.Fatalf("invoice.Create: %v", err)
 	}
 }
