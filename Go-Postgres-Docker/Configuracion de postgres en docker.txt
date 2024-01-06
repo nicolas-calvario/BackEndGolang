@@ -1,0 +1,26 @@
+------------Configuracion de postgres en docker------------
+---Descargar dokcer---
+docker pull postgres
+
+
+dokcer run -e POSTGRES_PASSWORD=root postgres 
+
+-- para entrar a al contenedor de docker 
+docker exec -it nameContenedor
+
+
+-- para crea  la base de datos
+CREATE DATABASE nameDB;
+
+mostrar bd \l
+
+---para ejecutar contenedot de manera productiva---
+docker run --name postgresGo -e POSTGRES_USER=calvario -e POSTGRES_PASSWORD=root -e POSTGRES_DB=DbGo -p 15432:5432  -d postgres 
+
+
+para conectarse  por el puerto 15432
+
+-- entrar a la  contenedor en ejecucion
+docker exec -it postgresGo bash
+sql -U calvario --password --db DbGo
+
