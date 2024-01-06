@@ -1,2 +1,2 @@
 # Golang
-Curso de golang
+Baken co Go
