@@ -24,3 +24,4 @@ para conectarse  por el puerto 15432
 docker exec -it postgresGo bash
 sql -U calvario --password --db DbGo
 
+docker run --name mysqlGo -e MYSQL_USER=calvario -e MYSQL_PASSWORD=root -e MYSQL_DATABASE=DbGo -p 33630:8080  -d mysql 
