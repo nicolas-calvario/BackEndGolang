@@ -2,7 +2,7 @@ package user
 
 import "time"
 
-type User struct {
+type Model struct {
 	ID        uint      `json:"id"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:createdat"`
@@ -11,7 +11,7 @@ type User struct {
 
 type IUser interface {
 	Migrate() error
-	//Create(*User) error
+	Create(*Model) error
 	// Update(*Model) error
 	// GetAll() (Models, error)
 	// GetById(uint) (*Model, error)
@@ -22,7 +22,7 @@ type Service struct {
 	iUser IUser
 }
 
-func NewServicec(i IUser) *Service {
+func NewService(i IUser) *Service {
 	return &Service{i}
 }
 
@@ -30,6 +30,7 @@ func (s *Service) Migrate() error {
 	return s.iUser.Migrate()
 }
 
-// func (s *Service) Create(u *User) error {
-// 	return s.iUser.Create(u)
-// }
+func (s *Service) Create(u *Model) error {
+	u.CreatedAt = time.Now()
+	return s.iUser.Create(u)
+}

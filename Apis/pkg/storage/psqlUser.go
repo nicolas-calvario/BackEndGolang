@@ -1,6 +1,7 @@
 package storage
 
 import (
+	user "Api-Go/pkg/User"
 	"database/sql"
 	"fmt"
 )
@@ -13,14 +14,14 @@ const (
 		updated_at TIMESTAMP,
 		CONSTRAINT user_id_pk PRIMARY KEY (id) 
 	)`
-	// psqlCreateProduct = `INSERT INTO products(name, observations, price, created_at) VALUES($1, $2, $3, $4) RETURNING id`
-	// psqlGetAllProduct = `SELECT id, name, observations, price,
+	psqlCreateUser = `INSERT INTO users(name, created_at) VALUES($1, $2) RETURNING id`
+	// psqlGetAlluser = `SELECT id, name, observations, price,
 	// created_at, updated_at
-	// FROM products`
-	// psqlGetProductByID = psqlGetAllProduct + " WHERE id = $1"
-	// psqlUpdateProduct  = `UPDATE products SET name = $1, observations = $2,
+	// FROM users`
+	// psqlGetuserByID = psqlGetAlluser + " WHERE id = $1"
+	// psqlUpdateuser  = `UPDATE users SET name = $1, observations = $2,
 	// price = $3, updated_at = $4 WHERE id = $5`
-	// psqlDeleteProduct = `DELETE FROM products WHERE id = $1`
+	// psqlDeleteuser = `DELETE FROM users WHERE id = $1`
 )
 
 type BdUser struct {
@@ -41,5 +42,23 @@ func (u BdUser) Migrate() error {
 		return err
 	}
 	fmt.Println("Migración de la tabla Usuario ejecutada correctamente")
+	return nil
+}
+
+func (u BdUser) Create(user *user.Model) error {
+
+	stmt, err := u.db.Prepare(psqlCreateUser)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(
+		user.Name,
+		user.CreatedAt,
+	).Scan(&user.ID)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Se ha guardado correctamente el usero")
 	return nil
 }

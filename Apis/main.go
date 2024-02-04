@@ -11,9 +11,24 @@ import (
 func main() {
 	fmt.Println("Creacion y manejo de apis con base de datos de postgres")
 	db.NewDbPSQL()
-	serviceU := user.NewServicec(storage.NewBdUser(db.Pool()))
+	Create()
+
+}
+
+func Migrate() {
+	serviceU := user.NewService(storage.NewBdUser(db.Pool()))
 
 	if err := serviceU.Migrate(); err != nil {
-		log.Fatalf("product.Migrate: %v", err)
+		log.Fatalf("user.Migrate: %v", err)
+	}
+}
+func Create() {
+	u := &user.Model{
+		Name: "Nicolas",
+	}
+	serviceU := user.NewService(storage.NewBdUser(db.Pool()))
+
+	if err := serviceU.Create(u); err != nil {
+		log.Fatalf("user.Create: %v", err)
 	}
 }
