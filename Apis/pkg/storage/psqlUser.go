@@ -1,7 +1,7 @@
 package storage
 
 import (
-	user "Api-Go/pkg/User"
+	"Api-Go/pkg/model"
 	"database/sql"
 	"fmt"
 )
@@ -32,20 +32,20 @@ func NewBdUser(db *sql.DB) *BdUser {
 	return &BdUser{db}
 }
 
-func (u BdUser) Migrate() error {
-	stmt, err := u.db.Prepare(psqlMigrateUser)
-	if err != nil {
-		return err
-	}
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
-	}
-	fmt.Println("Migración de la tabla Usuario ejecutada correctamente")
-	return nil
-}
+// func (u BdUser) Migrate() error {
+// 	stmt, err := u.db.Prepare(psqlMigrateUser)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	_, err = stmt.Exec()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	fmt.Println("Migración de la tabla Usuario ejecutada correctamente")
+// 	return nil
+// }
 
-func (u BdUser) Create(user *user.Model) error {
+func (u BdUser) Create(user *model.User) error {
 
 	stmt, err := u.db.Prepare(psqlCreateUser)
 	if err != nil {

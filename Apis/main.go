@@ -1,34 +1,20 @@
 package main
 
 import (
-	user "Api-Go/pkg/User"
-	db "Api-Go/pkg/dB"
+	"Api-Go/pkg/db"
+	"Api-Go/pkg/handler"
 	"Api-Go/pkg/storage"
 	"fmt"
-	"log"
+	"net/http"
 )
 
 func main() {
 	fmt.Println("Creacion y manejo de apis con base de datos de postgres")
 	db.NewDbPSQL()
-	Create()
 
-}
+	mux := http.NewServeMux()
 
-func Migrate() {
-	serviceU := user.NewService(storage.NewBdUser(db.Pool()))
+	handler.RouterUser(mux, storage.NewBdUser(db.Pool()))
+	http.ListenAndServe(":8080", mux)
 
-	if err := serviceU.Migrate(); err != nil {
-		log.Fatalf("user.Migrate: %v", err)
-	}
-}
-func Create() {
-	u := &user.Model{
-		Name: "Nicolas",
-	}
-	serviceU := user.NewService(storage.NewBdUser(db.Pool()))
-
-	if err := serviceU.Create(u); err != nil {
-		log.Fatalf("user.Create: %v", err)
-	}
 }
