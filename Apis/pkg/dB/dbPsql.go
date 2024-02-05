@@ -1,10 +1,12 @@
 package db
 
 import (
+	"Api-Go/pkg/model"
 	"database/sql"
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -30,4 +32,35 @@ func NewDbPSQL() {
 
 func Pool() *sql.DB {
 	return db
+}
+
+type scanner interface {
+	Scan(dest ...interface{}) error
+}
+
+func ScanRowUser(s scanner) (*model.User, error) {
+	m := &model.User{}
+	updatedAtNull := sql.NullTime{}
+
+	err := s.Scan(
+		&m.ID,
+		&m.Name,
+		&m.CreatedAt,
+		&updatedAtNull,
+	)
+	if err != nil {
+		return &model.User{}, err
+	}
+
+	m.UpdatedAt = updatedAtNull.Time
+
+	return m, nil
+}
+
+func TimeToNull(t time.Time) sql.NullTime {
+	null := sql.NullTime{Time: t}
+	if !null.Time.IsZero() {
+		null.Valid = true
+	}
+	return null
 }
