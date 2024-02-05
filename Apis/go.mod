@@ -1,5 +1,5 @@
-module apis-go
+module Api-Go
 
 go 1.21.6
 
-require go.mongodb.org/mongo-driver v1.13.1
+require github.com/lib/pq v1.10.9
