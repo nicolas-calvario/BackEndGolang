@@ -1,0 +1,7 @@
+Comandos para generar certificados jwt
+
+Certificado privado
+BackEndGolang/Apis/certificates$ openssl genrsa -out app.rsa 1024
+
+Certificado publico
+BackEndGolang/Apis/certificates$ openssl rsa -in app.rsa -pubout > app.rsa.pub
