@@ -117,11 +117,6 @@ func (p *user) delete(w http.ResponseWriter, r *http.Request) {
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
-	if err != nil {
-		response := newResponse(Error, "Ocurrió un error al elminar el registro", nil)
-		responseJSON(w, http.StatusInternalServerError, response)
-		return
-	}
 
 	response := newResponse(Message, "Ok", nil)
 	responseJSON(w, http.StatusOK, response)
@@ -145,11 +140,6 @@ func (p *user) getById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response := newResponse(Error, "El ID de la usera no existe", nil)
 		responseJSON(w, http.StatusBadRequest, response)
-		return
-	}
-	if err != nil {
-		response := newResponse(Error, "Ocurrió un error al elminar el registro", nil)
-		responseJSON(w, http.StatusInternalServerError, response)
 		return
 	}
 
