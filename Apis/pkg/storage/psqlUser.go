@@ -44,7 +44,7 @@ func (u BdUser) Create(user *model.User) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Se ha guardado correctamente el usero")
+	fmt.Println("Se ha guardado correctamente el usuario")
 	return nil
 }
 
